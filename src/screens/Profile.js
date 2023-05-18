@@ -1,5 +1,5 @@
 import { View, Text, Button, TextInput, Alert, StyleSheet } from "react-native";
-import { getAuth, updateProfile,  } from "firebase/auth";
+import { getAuth, updateProfile } from "firebase/auth";
 import { useState } from "react";
 
 const Profile = () => {

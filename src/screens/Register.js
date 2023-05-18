@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { auth, storage } from '../../App';
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { auth, storage, db } from '../../App';
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { ref, uploadBytes } from "firebase/storage";
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function RegisterScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -12,25 +13,33 @@ export default function RegisterScreen({ navigation }) {
 
     const handleSignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 const actionCodeSettings = {
                     url: 'http://localhost:19006/Login',
                     handleCodeInApp: true
                 };
-                sendEmailVerification(userCredential.user, actionCodeSettings)
-                    .then(async () => {
-                        const storageRef = ref(storage, auth.currentUser.uid + ".png");
-                        await uploadBytes(storageRef)
-                        navigation.navigate('Login');
-                    })
-                    .catch((error) => {
-                        setError(error.message);
+                try {
+                    const userRef = doc(db, "users", auth.currentUser.uid);
+                    await setDoc(userRef, {});
+                    await updateProfile(userCredential.user, {
+                        displayName: username,
                     });
+
+                    await sendEmailVerification(userCredential.user, actionCodeSettings);
+                    const storageRef = ref(storage, auth.currentUser.uid + ".png");
+                    await uploadBytes(storageRef);
+
+                    navigation.navigate('Login');
+                } catch (error) {
+                    console.log(error);
+                    alert(error);
+                }
             })
             .catch((error) => {
                 setError(error.message);
             });
     };
+
 
 
     return (

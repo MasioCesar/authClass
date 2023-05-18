@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { initializeApp } from "firebase/app";
-
+import { getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import Home from './src/screens/Home';
 import { getStorage } from 'firebase/storage';
 import Profile from './src/screens/Profile';
+import ToDoList from './src/screens/ToDoList';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const storage = getStorage(app);
+export const db = getFirestore(app);
 
 export default function App() {
   const authUser = getAuth();
@@ -47,6 +49,7 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen name="Home" component={Home} options={{ title: 'Home' }} />
           <Stack.Screen name="Profile" component={Profile} options={{ title: 'Profile' }} />
+          <Stack.Screen name="ToDoList" component={ToDoList} options={{ title: 'ToDoList' }} />
         </Stack.Navigator>
       </NavigationContainer>
     );

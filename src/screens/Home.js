@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-na
 import { auth, storage } from '../../App';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import List from './components/list';
 
 export default function Home({ navigation }) {
     const firebaseAuth = getAuth();
@@ -63,6 +64,9 @@ export default function Home({ navigation }) {
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Profile')}>
                 <Text style={styles.buttonText}>Perfil</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ToDoList')}>
+                <Text style={styles.buttonText}>Lista de Tarefas</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={signOut}>
                 <Text style={styles.buttonText}>Sair</Text>
             </TouchableOpacity>
@@ -80,6 +84,7 @@ export default function Home({ navigation }) {
                 style={{ display: 'none' }}
                 onChange={handleFileUpload}
             />
+            
         </View>
     );
 }
